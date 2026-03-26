@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Untukmu...</title>
 
 <style>
@@ -22,10 +23,11 @@ body {
   text-align: center;
   transition: opacity 2s ease;
   z-index: 3;
+  width: 90%;
 }
 
-h1 { color: #ff6b81; font-weight: normal; }
-p { line-height: 1.8; color: #bbb; }
+h1 { color: #ff6b81; font-size: 1.5em; }
+p { line-height: 1.6; font-size: 0.9em; }
 
 button {
   margin-top: 25px;
@@ -40,14 +42,24 @@ button {
 /* FINAL TEXT */
 .finalText {
   position: absolute;
-  width: 100%;
-  top: 45%;
+  width: 90%;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 40%;
   text-align: center;
-  font-size: 2em;
+  font-size: 1.3em;
   opacity: 0;
   transition: opacity 3s ease;
   color: #ff6b81;
   z-index: 3;
+}
+
+.finalText small {
+  display: block;
+  margin-top: 15px;
+  font-size: 0.7em;
+  color: #ccc;
+  line-height: 1.6;
 }
 
 /* CANVAS */
@@ -61,47 +73,35 @@ canvas {
 
 <body>
 
-<!-- AUDIO -->
 <audio id="music" loop>
   <source src="lagu.mp3" type="audio/mpeg">
 </audio>
 
 <div class="content" id="text">
-  <h1>Selamat Ulang Tahun Nurul Fatimah Assofi🎂</h1>
+  <h1>Selamat Ulang Tahun 🎂</h1>
   <p>
-    Mohon Maaf jika aku Egois...<br>
-    Aku cuma ingin kamu tau<br><br>
-    Sejak 19 Tahun yang lalu...<br>
-    Perasaanku masih sama seperti dulu<br>
-    Selalu mendo'akan Kebaikan dan kebahagiaan untukmu<br>
-    <br>
+    Mohon maaf jika aku egois...<br>
+    Aku cuma ingin kamu tahu<br><br>
+    Perasaanku masih sama seperti dulu,<br>
+    selalu mendoakan kebaikan untukmu.
   </p>
-  <button onclick="startShow()">Klik untuk Buka Pesan...</button>
+  <button onclick="startShow()">Klik untuk Buka Pesan</button>
 </div>
 
 <div class="finalText" id="finalText">
-  Selamat Ulang Tahun,<br>
-  Nurul Fatimah Assofi 💖<br><br>
-  <small style="color:#888;font-size:0.5em;">
-    Semoga Kamu Selalu Bahagia, My Princess
-    ijinkan aku mengungkapkan semua perasaanku kepadamu,
+  Selamat Ulang Tahun 💖<br><br>
+  <small>
+    Aku ingin jujur saja, aku sangat mencintaimu.<br><br>
 
-    Aku ingin jujur saja—
-    aku sangat mencintaimu.
-    Mungkin sekarang semuanya sudah berbeda,
-waktu sudah berjalan jauh,
-dan kita pun tak lagi seperti dulu.
-    Kalau suatu saat ada kesempatan,
-hanya ada aku dan kamu,
-izinkan aku mencoba lagi—
-mengejar cintamu,
-bukan seperti dulu yang terburu-buru,
-tapi dengan lebih tenang dan sungguh-sungguh.
+    Mungkin sekarang semuanya sudah berbeda,<br>
+    tapi perasaanku tidak berubah.<br><br>
 
-Aku tidak menjanjikan kesempurnaan,
-hanya keseriusan
-dan hati yang tetap memilih kamu,
-sampai sekarang.
+    Kalau suatu saat ada kesempatan,<br>
+    izinkan aku mencoba lagi,<br>
+    dengan cara yang lebih baik dan sungguh-sungguh.<br><br>
+
+    Aku tidak menjanjikan kesempurnaan,<br>
+    hanya hati yang tetap memilih kamu.
   </small>
 </div>
 
@@ -110,8 +110,13 @@ sampai sekarang.
 <script>
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
 let rockets = [];
 let particles = [];
@@ -121,12 +126,17 @@ let rain = [];
 function startShow() {
   document.getElementById("text").style.opacity = 0;
 
-  // play music
-  document.getElementById("music").play();
+  const music = document.getElementById("music");
+  music.play().catch(() => {}); // biar gak error di HP
 
   setTimeout(() => {
     launchRocket();
-  }, 1500);
+  }, 1000);
+
+  // fallback biar teks pasti muncul
+  setTimeout(() => {
+    document.getElementById("finalText").style.opacity = 1;
+  }, 5000);
 }
 
 /* ROCKET */
@@ -135,62 +145,57 @@ function launchRocket() {
     x: canvas.width / 2,
     y: canvas.height,
     targetY: canvas.height / 3,
-    speed: 4
+    speed: 5
   });
 }
 
-/* HEART EXPLOSION */
+/* HEART */
 function createHeartExplosion(x, y) {
-  for (let t = 0; t < Math.PI * 2; t += 0.15) {
+  for (let t = 0; t < Math.PI * 2; t += 0.2) {
     let hx = 16 * Math.pow(Math.sin(t), 3);
-    let hy = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+    let hy = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t));
 
     particles.push({
       x: x,
       y: y,
-      dx: hx * 0.25,
-      dy: hy * 0.25,
-      life: 150
+      dx: hx * 0.3,
+      dy: hy * 0.3,
+      life: 100
     });
   }
 
-  setTimeout(() => {
-    document.getElementById("finalText").style.opacity = 1;
-  }, 1000);
+  document.getElementById("finalText").style.opacity = 1;
 }
 
-/* RAIN SETUP */
-for (let i = 0; i < 200; i++) {
+/* RAIN */
+for (let i = 0; i < 150; i++) {
   rain.push({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
-    length: Math.random() * 20,
-    speed: Math.random() * 4 + 2
+    length: Math.random() * 15,
+    speed: Math.random() * 3 + 2
   });
 }
 
 /* ANIMATION */
 function animate() {
-  ctx.fillStyle = "rgba(0,0,0,0.2)";
+  ctx.fillStyle = "rgba(0,0,0,0.25)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Rain
-  ctx.strokeStyle = "rgba(200,200,255,0.3)";
-  ctx.lineWidth = 1;
   rain.forEach(r => {
     ctx.beginPath();
     ctx.moveTo(r.x, r.y);
     ctx.lineTo(r.x, r.y + r.length);
+    ctx.strokeStyle = "rgba(200,200,255,0.3)";
     ctx.stroke();
 
     r.y += r.speed;
     if (r.y > canvas.height) {
-      r.y = -10;
+      r.y = 0;
       r.x = Math.random() * canvas.width;
     }
   });
 
-  // Rocket
   rockets.forEach((r, i) => {
     r.y -= r.speed;
     ctx.fillStyle = "#fff";
@@ -202,20 +207,17 @@ function animate() {
     }
   });
 
-  // Particles
   particles.forEach((p, i) => {
     p.x += p.dx;
     p.y += p.dy;
     p.life--;
 
-    ctx.fillStyle = "#ff6b81";
     ctx.beginPath();
     ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+    ctx.fillStyle = "#ff6b81";
     ctx.fill();
 
-    if (p.life <= 0) {
-      particles.splice(i, 1);
-    }
+    if (p.life <= 0) particles.splice(i, 1);
   });
 
   requestAnimationFrame(animate);
