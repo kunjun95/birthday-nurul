@@ -14,7 +14,7 @@ body {
   color: #ddd;
 }
 
-/* TEXT */
+/* TEXT AWAL */
 .content {
   position: absolute;
   top: 50%;
@@ -26,7 +26,7 @@ body {
   width: 90%;
 }
 
-h1 { color: #ff6b81; font-size: 1.5em; }
+h1 { color: #ff6b81; font-weight: normal; font-size: 1.5em; }
 p { line-height: 1.6; font-size: 0.9em; }
 
 button {
@@ -52,14 +52,21 @@ button {
   transition: opacity 3s ease;
   color: #ff6b81;
   z-index: 3;
+  pointer-events: none;
+
+  max-height: 70vh;
+  overflow-y: auto;
+
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .finalText small {
   display: block;
   margin-top: 15px;
-  font-size: 0.7em;
-  color: #ccc;
+  font-size: 0.75em;
   line-height: 1.6;
+  color: #ccc;
 }
 
 /* CANVAS */
@@ -85,23 +92,28 @@ canvas {
     Perasaanku masih sama seperti dulu,<br>
     selalu mendoakan kebaikan untukmu.
   </p>
-  <button onclick="startShow()">Klik untuk Buka Pesan</button>
+  <button id="startBtn">Klik untuk Buka Pesan</button>
 </div>
 
 <div class="finalText" id="finalText">
-  Selamat Ulang Tahun 💖<br><br>
+  Selamat Ulang Tahun,<br>
+  Nurul Fatimah Assofi 💖
+
   <small>
-    Aku ingin jujur saja, aku sangat mencintaimu.<br><br>
+    Aku ingin jujur mengungkapkan yang ada di hatiku.<br><br>
 
-    Mungkin sekarang semuanya sudah berbeda,<br>
-    tapi perasaanku tidak berubah.<br><br>
+    Awalnya ingin aku sampaikan saat kita bertemu,<br>
+    tapi ternyata kita kembali hilang.<br><br>
 
-    Kalau suatu saat ada kesempatan,<br>
-    izinkan aku mencoba lagi,<br>
-    dengan cara yang lebih baik dan sungguh-sungguh.<br><br>
+    Aku mencintaimu sejak 19 tahun yang lalu,<br>
+    tidak pernah berkurang, justru semakin besar.<br><br>
 
-    Aku tidak menjanjikan kesempurnaan,<br>
-    hanya hati yang tetap memilih kamu.
+    Jika suatu saat kita sama-sama sendiri,<br>
+    izinkan aku mencoba lagi...<br>
+    untuk mendapatkan cintamu... <br>
+Meski Raga ini tak lagi muda dan Rambut ini tak lagi hitam.. <br>
+<br>
+aku akan selalu mengawasimu dan mendo'akanmu dari jauh...
   </small>
 </div>
 
@@ -111,6 +123,7 @@ canvas {
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+/* RESPONSIVE CANVAS */
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -122,12 +135,15 @@ let rockets = [];
 let particles = [];
 let rain = [];
 
+/* BUTTON EVENT */
+document.getElementById("startBtn").addEventListener("click", startShow);
+
 /* START */
 function startShow() {
   document.getElementById("text").style.opacity = 0;
 
   const music = document.getElementById("music");
-  music.play().catch(() => {}); // biar gak error di HP
+  if (music) music.play().catch(() => {});
 
   setTimeout(() => {
     launchRocket();
@@ -136,7 +152,7 @@ function startShow() {
   // fallback biar teks pasti muncul
   setTimeout(() => {
     document.getElementById("finalText").style.opacity = 1;
-  }, 5000);
+  }, 4000);
 }
 
 /* ROCKET */
@@ -149,7 +165,7 @@ function launchRocket() {
   });
 }
 
-/* HEART */
+/* HEART EXPLOSION */
 function createHeartExplosion(x, y) {
   for (let t = 0; t < Math.PI * 2; t += 0.2) {
     let hx = 16 * Math.pow(Math.sin(t), 3);
@@ -170,8 +186,8 @@ function createHeartExplosion(x, y) {
 /* RAIN */
 for (let i = 0; i < 150; i++) {
   rain.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
     length: Math.random() * 15,
     speed: Math.random() * 3 + 2
   });
